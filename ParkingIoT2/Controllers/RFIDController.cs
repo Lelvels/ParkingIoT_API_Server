@@ -25,12 +25,24 @@ namespace ParkingIoT2.Controllers
             return Ok(rfid);
         }
         [HttpGet]
-        [Route("{id:guid}")]
+        [Route("id/{id:guid}")]
         [ActionName("GetRFIDByIdAsync")]
         public async Task<IActionResult> GetRFIDByIdAsync(Guid id, 
-            [FromQuery(Name = "includePA")] bool includeCus)
+            [FromQuery(Name = "includeCustomer")] bool includeCus)
         {
             var rfid = await rFIDRepository.GetByIdAsync(id, includeCus);
+            if (rfid == null)
+                return NotFound();
+            return Ok(rfid);
+        }
+        [HttpGet]
+        [Route("code/{code}")]
+        public async Task<IActionResult> GetRFIDByCodeAsync(string code, 
+            [FromQuery(Name = "includeCustomer")] bool includeCus)
+        {
+            var rfid = await rFIDRepository.GetByCodeAsync(code, includeCus);
+            if (rfid == null)
+                return NotFound();
             return Ok(rfid);
         }
         [HttpPost]

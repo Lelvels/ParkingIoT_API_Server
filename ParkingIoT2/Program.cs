@@ -21,17 +21,28 @@ builder.Services.AddScoped<IParkingAreaRepository, ParkingAreaRepository>();
 builder.Services.AddScoped<IParkingSlotRepository, ParkingSlotRepository>();
 builder.Services.AddScoped<IRFIDRepository, RFIDRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IParkingManagement, ParkingManagement>();
 //Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseHttpsRedirection();
 }
+
+/*builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    var env = hostingContext.HostingEnvironment;
+    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{ env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+})*/;
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

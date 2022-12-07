@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkingIoT2", "ParkingIoT2\ParkingIoT2.csproj", "{8728B1F3-9ACF-4103-8860-62E9070658FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkingIoT", "..\ParkingIoT\ParkingIoT\ParkingIoT.csproj", "{F61F47D8-4FD2-4362-9283-FD65130CA966}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureTelemetryProccessing", "AzureTelemetryProccessing\AzureTelemetryProccessing.csproj", "{564D4F7C-15F5-42C5-937F-684FB0D440AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{8728B1F3-9ACF-4103-8860-62E9070658FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8728B1F3-9ACF-4103-8860-62E9070658FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8728B1F3-9ACF-4103-8860-62E9070658FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F61F47D8-4FD2-4362-9283-FD65130CA966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F61F47D8-4FD2-4362-9283-FD65130CA966}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F61F47D8-4FD2-4362-9283-FD65130CA966}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F61F47D8-4FD2-4362-9283-FD65130CA966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{564D4F7C-15F5-42C5-937F-684FB0D440AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{564D4F7C-15F5-42C5-937F-684FB0D440AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{564D4F7C-15F5-42C5-937F-684FB0D440AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{564D4F7C-15F5-42C5-937F-684FB0D440AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

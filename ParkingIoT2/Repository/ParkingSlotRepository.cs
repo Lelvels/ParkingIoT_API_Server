@@ -15,22 +15,20 @@ namespace ParkingIoT2.Repository
         public async Task<IEnumerable<ParkingSlot>> GetAllAsync()
         {
             return await parkingIOTDBContext.ParkingSlots
-                .Include(x => x.ParkingArea)
                 .ToListAsync();
         }
-        public Task<ParkingSlot> GetByIdAsync(Guid id, bool includePA)
+        public Task<ParkingSlot> GetByIdAsync(Guid id)
         {
-            if (!includePA)
-            {
-                return parkingIOTDBContext.ParkingSlots
-                    .FirstOrDefaultAsync(x => x.Id == id);
-            } else
-            {
-                return parkingIOTDBContext.ParkingSlots
-                    .Include(x => x.ParkingArea)
-                    .FirstOrDefaultAsync(x => x.Id == id);
-            }
-           
+            return parkingIOTDBContext.ParkingSlots
+                //.Include(x => x.ParkingArea)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<ParkingSlot>> GetAllParkingSlotsByParkingAreaId(Guid parkingAreaId)
+        {
+            return await parkingIOTDBContext.ParkingSlots
+                .Where(x => x.ParkingArea.Id == parkingAreaId)
+                .ToListAsync();
         }
         public async Task<ParkingSlot> AddAsync(ParkingSlot parkingSlot)
         {
@@ -41,7 +39,7 @@ namespace ParkingIoT2.Repository
         }
         public async Task<ParkingSlot> UpdateAsync(Guid id, ParkingSlot parkingSlot)
         {
-            ParkingSlot oldParkingSlot = await GetByIdAsync(id, false);
+            ParkingSlot oldParkingSlot = await GetByIdAsync(id);
             if(oldParkingSlot == null)
             {
                 return null;
@@ -53,7 +51,7 @@ namespace ParkingIoT2.Repository
         }
         public async Task<ParkingSlot> DeleteAsync(Guid id)
         {
-            ParkingSlot parkingSlot = await GetByIdAsync(id, false);
+            ParkingSlot parkingSlot = await GetByIdAsync(id);
             if (parkingSlot == null)
                 return null;
             parkingIOTDBContext.ParkingSlots.Remove(parkingSlot);

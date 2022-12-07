@@ -39,13 +39,22 @@ namespace ParkingIoT2.Repository
                 .ToListAsync();
         }
 
+        public async Task<RFIDCode> GetByCodeAsync(string code, bool includeCus)
+        {
+            if (includeCus)
+                return await parkingIOTDBContext.RFIDCodes
+                    .Include(x => x.Customer)
+                    .FirstOrDefaultAsync(x => x.Code.Equals(code));
+            return await parkingIOTDBContext.RFIDCodes
+                .FirstOrDefaultAsync(x => x.Code.Equals(code));
+        }
+
         public async Task<RFIDCode> GetByIdAsync(Guid id, bool includeCus)
         {
             if (includeCus)
                 return await parkingIOTDBContext.RFIDCodes
                     .Include(x => x.Customer)
                     .FirstOrDefaultAsync(x => x.Id == id);
-
             return await parkingIOTDBContext.RFIDCodes
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

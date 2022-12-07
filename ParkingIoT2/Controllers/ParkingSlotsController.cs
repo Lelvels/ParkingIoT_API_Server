@@ -31,11 +31,23 @@ namespace ParkingIoT2.Controllers
             return Ok(parkingSlotsDTO);
         }
         [HttpGet]
+        [Route("paid/{paId:guid}")]
+        [ActionName("GetParkingSlotsByPaIdAsync")]
+        public async Task<IActionResult> GetParkingSlotsByPaIdAsync([FromRoute] Guid paId)
+        {
+            var parkingSlots = await parkingSlotRepository.GetAllParkingSlotsByParkingAreaId(paId);
+            var parkingSlotsDTO = mapper.Map<List<Models.DTO.ParkingSlotDTO>>(parkingSlots);
+            return Ok(parkingSlotsDTO);
+        }
+
+        [HttpGet]
         [Route("{id:guid}")]
         [ActionName("GetParkingSlotByIdAsync")]
-        public async Task<IActionResult> GetParkingSlotByIdAsync(Guid id, [FromQuery(Name = "includePA")] bool includePA)
+        public async Task<IActionResult> GetParkingSlotByIdAsync(Guid id)
         {
-            var parkingSlot = await parkingSlotRepository.GetByIdAsync(id, includePA);
+            var parkingSlot = await parkingSlotRepository.GetByIdAsync(id);
+            if (parkingSlot == null)
+                return NotFound();
             var parkingSlotDTO = mapper.Map<Models.DTO.ParkingSlotDTO>(parkingSlot);
             return Ok(parkingSlotDTO);
         }

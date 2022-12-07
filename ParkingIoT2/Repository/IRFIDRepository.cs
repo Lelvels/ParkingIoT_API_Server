@@ -5,6 +5,7 @@ namespace ParkingIoT2.Repository
     {
         Task<IEnumerable<RFIDCode>> GetAllAsync();
         Task<RFIDCode> GetByIdAsync(Guid id, bool includeCus);
+        Task<RFIDCode> GetByCodeAsync(string code, bool includeCus);
         Task<RFIDCode> AddAsync(RFIDCode code);
         Task<RFIDCode> UpdateAsync(Guid id, Guid CustomerId, RFIDCode code);
         Task<RFIDCode> DeleteAsync(Guid id);

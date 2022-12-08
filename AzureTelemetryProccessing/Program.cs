@@ -36,7 +36,7 @@ namespace CheeseCaveOperator
         private static DateTimeOffset appStartTime = DateTimeOffset.UtcNow;
         public static async Task Main(string[] args)
         {
-            ConsoleHelper.WriteColorMessage("Cheese Cave Operator\n", ConsoleColor.Yellow);
+            ConsoleHelper.WriteColorMessage("Azure Telemetry Processing\n", ConsoleColor.Yellow);
             var connectionString = IotConfigs.EVENTHUBS_COMPATIBLE_ENDPOINT;
             // Assigns the value "$Default"
             var consumerGroup = EventHubConsumerClient.DefaultConsumerGroupName;
@@ -146,20 +146,23 @@ namespace CheeseCaveOperator
         private static async Task ProcessRFIDIn(HttpClient client, RFIDIn rfid)
         {
             var url = IotConfigs.WEBSERVER_HOSTNAME + "/api/ParkingManagement?parkingAreaId=" + rfid.ParkingAreaId + "&RFIDCode=" + rfid.RFIDCode;
-            var json = await client.GetStringAsync(url);
-            Console.WriteLine("[+] Response: " + json);
-            if (!string.IsNullOrEmpty(json))
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            if (response.IsSuccessStatusCode)
             {
+                var json = response.Content.ReadAsStringAsync().Result;
+                Console.WriteLine(json);
+                RFIDd2c d2c = new RFIDd2c(true, rfid.Id);
+                //Generate message
+                string serializeJSON = JsonConvert.SerializeObject(d2c);
+                var commandMessage = new Message(Encoding.ASCII.GetBytes(serializeJSON));
+                Console.Write("[+] Device to cloud message: " + serializeJSON);
+                await serviceClient.SendAsync(IotConfigs.DEVICE_ID, commandMessage);
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
                 RFIDd2c d2c = new RFIDd2c(false, rfid.Id);
-                if (!json.Contains("\"title\": \"Not Found\""))
-                {
-                    RFIDResponse deserializedObj = JsonConvert.DeserializeObject<RFIDResponse>(json);
-                    Console.WriteLine("[+] Response: " + deserializedObj.code);
-                    if (deserializedObj.code.Equals(rfid.RFIDCode))
-                    {
-                        d2c.Result = true;
-                    }
-                }
                 //Generate message
                 string serializeJSON = JsonConvert.SerializeObject(d2c);
                 var commandMessage = new Message(Encoding.ASCII.GetBytes(serializeJSON));
@@ -219,12 +222,6 @@ namespace CheeseCaveOperator
             }
             else
                 Console.WriteLine("[+] Reponse from server empty or null!");
-        }
-
-        private async static Task SendCloudToDeviceMessageAsync()
-        {
-            var commandMessage = new Message(Encoding.ASCII.GetBytes("Cloud to device message."));
-            await serviceClient.SendAsync(IotConfigs.DEVICE_ID, commandMessage);
         }
     }
 
